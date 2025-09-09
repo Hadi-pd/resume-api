@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\WorkExperienceController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -11,4 +12,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user/{user}', [AuthController::class, 'updateUser']);
     
     Route::apiResource('skills', SkillController::class);
+    Route::apiResource('work-experiences', WorkExperienceController::class);
 });
