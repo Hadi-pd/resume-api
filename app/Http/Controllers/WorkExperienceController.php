@@ -2,64 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreWorkExperienceRequest;
+use App\Http\Requests\UpdateWorkExperienceRequest;
+use App\Http\Resources\WorkExperienceResource;
 use App\Models\WorkExperience;
 use Illuminate\Http\Request;
 
 class WorkExperienceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $items = WorkExperience::latest()->paginate(10);
+        return WorkExperienceResource::collection($items);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreWorkExperienceRequest $request)
     {
-        //
+        $item = WorkExperience::create($request->validated());
+        return new WorkExperienceResource($item);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(WorkExperience $workExperience)
     {
-        //
+        return new WorkExperienceResource($workExperience);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(WorkExperience $workExperience)
+    public function update(UpdateWorkExperienceRequest $request, WorkExperience $workExperience)
     {
-        //
+        $workExperience->update($request->validated());
+        return new WorkExperienceResource($workExperience);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, WorkExperience $workExperience)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(WorkExperience $workExperience)
     {
-        //
+        $workExperience->delete();
+        return response()->json(['message' => 'Work experience deleted successfully']);
     }
 }
