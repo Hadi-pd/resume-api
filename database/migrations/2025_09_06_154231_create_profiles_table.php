@@ -20,10 +20,9 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('avatar')->nullable();
-            $table->string('twitter')->nullable();
-            $table->string('facebook')->nullable();
-            $table->string('instagram')->nullable();
-            $table->string('github')->nullable();
+            $table->string('age')->nullable();
+            $table->string('marital')->nullable();
+            $table->string('military')->nullable();
             $table->timestamps();
         });
     }
