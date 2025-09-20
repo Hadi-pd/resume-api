@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EducationRequest;
+use App\Http\Resources\EducationResource;
 use App\Models\Education;
 use Illuminate\Http\Request;
 
@@ -12,23 +14,22 @@ class EducationController extends Controller
      */
     public function index()
     {
-        //
+        $educations = Education::latest()->paginate(10);
+        return EducationResource::collection($educations);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EducationRequest $request)
     {
-        //
+        $education = Education::create($request->validated());
+
+        return response()->json([
+            'message' => 'Education created successfully',
+            'data'    => new EducationResource($education),
+        ], 201);
     }
 
     /**
@@ -36,23 +37,20 @@ class EducationController extends Controller
      */
     public function show(Education $education)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Education $education)
-    {
-        //
+            return new EducationResource($education);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Education $education)
+    public function update(EducationRequest $request, Education $education)
     {
-        //
+        $education->update($request->validated());
+
+        return response()->json([
+            'message' => 'Education updated successfully',
+            'data'    => new EducationResource($education),
+        ]);
     }
 
     /**
@@ -60,6 +58,10 @@ class EducationController extends Controller
      */
     public function destroy(Education $education)
     {
-        //
+        $education->delete();
+
+        return response()->json([
+            'message' => 'Education deleted successfully',
+        ]);
     }
 }
