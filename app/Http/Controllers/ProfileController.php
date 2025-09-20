@@ -3,63 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Models\Profile;
-use Illuminate\Http\Request;
+use App\Http\Requests\ProfileRequest;
+use App\Http\Resources\ProfileResource;
+use Illuminate\Http\JsonResponse;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function show()
     {
-        //
+        $profile = Profile::first();
+
+        if (!$profile) {
+            return response()->json([
+                'message' => 'Profile not found',
+            ], 404);
+        }
+
+        return new ProfileResource($profile);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function storeOrUpdate(ProfileRequest $request): JsonResponse
     {
-        //
-    }
+        $data = $request->validated();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $data['avatar'] = $path;
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Profile $profile)
-    {
-        //
-    }
+        $profile = Profile::first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Profile $profile)
-    {
-        //
-    }
+        if ($profile) {
+            $profile->update($data);
+            $message = 'Profile updated successfully';
+        } else {
+            $profile = Profile::create($data);
+            $message = 'Profile created successfully';
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Profile $profile)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Profile $profile)
-    {
-        //
+        return response()->json([
+            'message' => $message,
+            'data'    => new ProfileResource($profile),
+        ]);
     }
 }
