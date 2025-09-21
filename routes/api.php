@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillController;
+use App\Http\Controllers\SocialLinkController;
 use App\Http\Controllers\WorkExperienceController;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -16,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('skills', SkillController::class);
     Route::apiResource('work-experiences', WorkExperienceController::class);
     Route::apiResource('educations', EducationController::class);
+    Route::apiResource('social-links', SocialLinkController::class);
 
     Route::get('profile', [ProfileController::class, 'show']);
     Route::post('profile', [ProfileController::class, 'storeOrUpdate']);
